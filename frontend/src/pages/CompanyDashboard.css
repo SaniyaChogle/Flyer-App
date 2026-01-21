@@ -246,19 +246,32 @@
   cursor: not-allowed;
 }
 
+.btn-share {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.btn-share:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5568d3 0%, #6a4291 100%);
+}
+
 .btn-download {
-  background: #667eea;
+  background: #4CAF50;
   color: white;
 }
 
-.btn-whatsapp {
-  background: #25D366;
-  color: white;
+.btn-download:hover:not(:disabled) {
+  background: #45a049;
 }
 
 .btn-delete {
   background: #dc3545;
   color: white;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #c82333;
 }
 
 @media (max-width: 768px) {

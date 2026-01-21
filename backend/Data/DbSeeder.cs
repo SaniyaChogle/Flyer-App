@@ -15,44 +15,44 @@ public static class DbSeeder
         // Create companies
         var companies = new List<Company>
         {
-            new Company { Name = "Company A" },
-            new Company { Name = "Company B" },
-            new Company { Name = "Company C" }
+            new Company { Name = "Company A", ContactEmail = "contact@companya.com" },
+            new Company { Name = "Company B", ContactEmail = "contact@companyb.com" },
+            new Company { Name = "Company C", ContactEmail = "contact@companyc.com" }
         };
 
         context.Companies.AddRange(companies);
         context.SaveChanges();
 
-        // Create admin user
+        // Create admin user (Password: admin123)
         var admin = new User
         {
             Email = "admin@flyer.com",
-            Password = "admin123",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
             Role = UserRole.Admin,
             CompanyId = null
         };
 
-        // Create company users (companies logging in as users)
+        // Create company users (Password: company123)
         var companyUsers = new List<User>
         {
             new User
             {
                 Email = "companyA@flyer.com",
-                Password = "company123",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("company123"),
                 Role = UserRole.Company,
                 CompanyId = companies[0].Id
             },
             new User
             {
                 Email = "companyB@flyer.com",
-                Password = "company123",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("company123"),
                 Role = UserRole.Company,
                 CompanyId = companies[1].Id
             },
             new User
             {
                 Email = "companyC@flyer.com",
-                Password = "company123",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("company123"),
                 Role = UserRole.Company,
                 CompanyId = companies[2].Id
             }

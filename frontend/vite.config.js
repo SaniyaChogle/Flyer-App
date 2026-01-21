@@ -12,13 +12,24 @@ export default defineConfig({
     proxy: {
       // Proxy API requests to backend (avoids mixed content errors)
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://192.168.1.34:5000',
         changeOrigin: true,
         secure: false,
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
       },
       // Proxy image uploads (wwwroot folder)
       '/uploads': {
-        target: 'http://localhost:5000',
+        target: 'http://192.168.1.34:5000',
         changeOrigin: true,
         secure: false,
       },

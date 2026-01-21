@@ -95,12 +95,14 @@ const Login = () => {
           </button>
         </form>
 
+        <div className="register-link">
+          <p>Don't have an account? <a href="#" onClick={() => navigate('/register')}>Register here</a></p>
+        </div>
+
         <div className="demo-credentials">
           <p><strong>Demo Credentials:</strong></p>
           <p>Admin: admin@flyer.com / admin123</p>
-          <p>Company A: companyA@flyer.com / company123</p>
-          <p>Company B: companyB@flyer.com / company123</p>
-          <p>Company C: companyC@flyer.com / company123</p>
+          <p><em>Companies register themselves via the Register page</em></p>
         </div>
       </div>
     </div>

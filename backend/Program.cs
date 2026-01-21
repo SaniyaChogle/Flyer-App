@@ -8,13 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; // Use property names as-is
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
-// Configure SQLite database
+// Configure SQL Server database
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=flyerapp.db"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure CORS for React frontend (allow local network access)
 builder.Services.AddCors(options =>

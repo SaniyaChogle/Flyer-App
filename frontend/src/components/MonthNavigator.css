@@ -1,0 +1,39 @@
+.month-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.current-month h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+  min-width: 250px;
+  text-align: center;
+}
+
+.month-nav-btn {
+  padding: 0.75rem 1.5rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.month-nav-btn:hover {
+  background: #45a049;
+}
+
+.month-nav-btn:active {
+  transform: scale(0.98);
+}
