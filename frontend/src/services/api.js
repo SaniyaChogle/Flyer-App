@@ -3,11 +3,12 @@ import axios from 'axios';
 // Backend configuration
 // Hardcoded for network access - backend is running on 0.0.0.0:5000
 const isDev = import.meta.env.DEV;
-const API_HOST = '192.168.1.34'; // Your machine's IP address
+//const API_HOST = '192.168.1.34'; // Your machine's IP address
+const API_HOST = 'localhost';
 
 // Use direct backend URL to avoid HTTPS proxy issues
-const API_BASE_URL = `http://${API_HOST}:5000/api`;
-const BASE_URL = `http://${API_HOST}:5000`;
+const API_BASE_URL = `https://${API_HOST}:5001/api`;
+const BASE_URL = `https://${API_HOST}:5001`;
 
 // Debug logging
 console.log('API Configuration:', {

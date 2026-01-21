@@ -1,0 +1,29 @@
+1. was getting error for frontend not connecting to https profile
+	- the launch settings configuration was getting overwritten due to this code in Program.cs file "builder.WebHost.UseUrls("http://0.0.0.0:5000");"
+	- got connected from postman after disabling this but was getting this certificate error: net::ERR_CERT_AUTHORITY_INVALID.
+	solved by these steps:
+		- dotnet dev-certs https --clean
+		dotnet dev-certs https --trust
+		Then:
+		Restart your backend
+		Restart your browser
+		Restart React (npm start)
+
+2. to forcefully run the dotnet on specific profile:
+	dotnet run --launch-profile https
+	also can run this way: dotnet run --urls "https://localhost:5001"
+
+3. Dotnet help command
+	dotnet run --help  
+
+4. To restart the server
+	taskkill /f /im dotnet.exe
+	taskkill /F /IM node.exe
+
+5. To check whether port is currently in use, and which process is using it.
+	netstat -ano | findstr :5173
+	check if the application is running on port 5000 or 5001.
+		netstat -ano | findstr ":500[01]"
+
+
+
