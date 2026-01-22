@@ -52,15 +52,26 @@ const AdminDashboard = () => {
   const fetchCompanies = useCallback(async () => {
     try {
       const response = await companyAPI.getAll();
-      setCompanies(response.data);
-      if (response.data.length > 0) {
-        setCompanyId(response.data[0].id);
+
+      // ✅ Correct mapping: PascalCase → camelCase
+      const normalized = response.data.map(item => ({
+        id: item.Id,
+        name: item.Name,
+        contactEmail: item.ContactEmail,
+        createdAt: item.CreatedAt
+      }));
+
+      setCompanies(normalized);
+
+      if (normalized.length > 0) {
+        setCompanyId(normalized[0].id);
       }
     } catch (err) {
       console.error('Failed to load companies:', err);
       setError('Failed to load companies');
     }
   }, []);
+
 
   useEffect(() => {
     if (user?.role !== 'Admin') {
@@ -216,7 +227,7 @@ const AdminDashboard = () => {
     <div className="admin-container">
       {/* Image Modal */}
       {enlargedImage && (
-        <div className="image-modal" onClick={closeEnlargedImage}>
+        <div key="image-modal" className="image-modal" onClick={closeEnlargedImage}>
           <button className="modal-close" onClick={closeEnlargedImage}>×</button>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <img src={enlargedImage.url} alt={enlargedImage.title} />
@@ -230,7 +241,7 @@ const AdminDashboard = () => {
 
       {/* Edit Flyer Modal */}
       {editingFlyer && (
-        <div className="image-modal" onClick={() => setEditingFlyer(null)}>
+        <div key="edit-modal" className="image-modal" onClick={() => setEditingFlyer(null)}>
           <div className="modal-content edit-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setEditingFlyer(null)}>×</button>
             <h2>Edit Flyer</h2>
@@ -283,7 +294,7 @@ const AdminDashboard = () => {
             <div className="form-group">
               <label htmlFor="title-mode">Title Selection</label>
               <div className="radio-group">
-                <label>
+                <label key="predefined-option">
                   <input
                     type="radio"
                     value="predefined"
@@ -292,7 +303,7 @@ const AdminDashboard = () => {
                   />
                   Choose from list
                 </label>
-                <label>
+                <label key="custom-option">
                   <input
                     type="radio"
                     value="custom"
@@ -313,7 +324,7 @@ const AdminDashboard = () => {
                   onChange={(e) => setTitle(e.target.value)}
                   required
                 >
-                  <option value="">Select a title</option>
+                  <option key="select-title" value="">Select a title</option>
                   {FLYER_TITLES.map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
@@ -350,8 +361,9 @@ const AdminDashboard = () => {
                 onChange={(e) => setCompanyId(e.target.value)}
                 required
               >
-                {companies.map((company) => (
-                  <option key={company.id} value={company.id}>
+                <option value="">Select a company</option>
+                {companies.map((company, index) => (
+                  <option key={`company-${company.id}-${index}`} value={company.Id}>
                     {company.name}
                   </option>
                 ))}

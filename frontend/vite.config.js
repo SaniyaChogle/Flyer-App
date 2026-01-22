@@ -12,7 +12,7 @@ export default defineConfig({
     proxy: {
       // Proxy API requests to backend (avoids mixed content errors)
       '/api': {
-        target: 'http://192.168.1.34:5000',
+        target: 'https://localhost:5001',
         changeOrigin: true,
         secure: false,
         configure: (proxy) => {
@@ -29,7 +29,7 @@ export default defineConfig({
       },
       // Proxy image uploads (wwwroot folder)
       '/uploads': {
-        target: 'http://192.168.1.34:5000',
+        target: 'https://localhost:5001',
         changeOrigin: true,
         secure: false,
       },

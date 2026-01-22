@@ -1,19 +1,12 @@
 import axios from 'axios';
 
 // Backend configuration
-// Hardcoded for network access - backend is running on 0.0.0.0:5000
-const isDev = import.meta.env.DEV;
-//const API_HOST = '192.168.1.34'; // Your machine's IP address
-const API_HOST = 'localhost';
-
-// Use direct backend URL to avoid HTTPS proxy issues
-const API_BASE_URL = `https://${API_HOST}:5001/api`;
-const BASE_URL = `https://${API_HOST}:5001`;
+// Use relative URLs to leverage Vite proxy for development
+const API_BASE_URL = '/api';
+const BASE_URL = '';
 
 // Debug logging
 console.log('API Configuration:', {
-  isDev,
-  API_HOST,
   API_BASE_URL,
   currentHostname: window.location.hostname
 });
