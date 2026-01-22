@@ -447,7 +447,33 @@ const AdminDashboard = () => {
                   <h3>{flyer.title}</h3>
                   <p className="company-badge">{flyer.companyName}</p>
                   <p className="flyer-date">
-                    For: {new Date(flyer.forDate).toLocaleDateString()}
+                    For: {(() => {
+                      try {
+                        // Try to parse the date - handle various formats
+                        const dateStr = flyer.forDate;
+                        let date;
+
+                        if (typeof dateStr === 'string') {
+                          // If it's an ISO string, parse it directly
+                          if (dateStr.includes('T')) {
+                            date = new Date(dateStr);
+                          } else {
+                            // Try to parse as date-only string
+                            date = new Date(dateStr + 'T00:00:00');
+                          }
+                        } else {
+                          date = new Date(dateStr);
+                        }
+
+                        return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        });
+                      } catch {
+                        return 'Invalid Date';
+                      }
+                    })()}
                   </p>
                 </div>
                 <div className="flyer-actions">

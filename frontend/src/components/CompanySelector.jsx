@@ -15,8 +15,8 @@ const CompanySelector = ({ companies, selectedCompanyId, onCompanyChange, label 
       >
         <option key="all-companies" value="">All Companies</option>
         {companies.map((company, index) => (
-          <option key={`company-${company.Id}-${index}`} value={company.Id}>
-            {company.name}
+          <option key={`company-${company.id || company.Id}-${index}`} value={company.id || company.Id}>
+            {company.name || company.Name}
           </option>
         ))}
       </select>

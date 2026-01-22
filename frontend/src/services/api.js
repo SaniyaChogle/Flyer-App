@@ -45,7 +45,7 @@ export const flyerAPI = {
     return api.get(`/flyer/company/${companyId}`, { params });
   },
   downloadFlyer: (flyerId) => `${API_BASE_URL}/flyer/download/${flyerId}`,
-  getFlyerImageUrl: (imagePath) => `${BASE_URL}${imagePath}`,
+  getFlyerImageUrl: (imagePath) => imagePath,
   deleteFlyer: (flyerId) => api.delete(`/flyer/${flyerId}`),
 };
 
