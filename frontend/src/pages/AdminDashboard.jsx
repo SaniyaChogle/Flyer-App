@@ -43,7 +43,19 @@ const AdminDashboard = () => {
       }
       const response = await flyerAPI.getAll(params);
       console.log('Flyers data:', response.data);
-      setAllFlyers(response.data);
+
+      // ✅ Normalize API response: PascalCase → camelCase
+      const normalized = response.data.map(item => ({
+        id: item.Id,
+        title: item.Title,
+        imagePath: item.ImagePath,
+        companyId: item.CompanyId,
+        companyName: item.CompanyName,
+        forDate: item.ForDate,
+        createdAt: item.CreatedAt
+      }));
+
+      setAllFlyers(normalized);
     } catch (err) {
       console.error('Failed to load flyers', err);
       setError('Failed to load flyers');

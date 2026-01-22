@@ -25,7 +25,19 @@ const CompanyDashboard = () => {
     setLoading(true);
     try {
       const response = await flyerAPI.getFlyersByCompany(user.companyId, currentYear, currentMonth);
-      setFlyers(response.data);
+
+      // ✅ Normalize API response: PascalCase → camelCase
+      const normalized = response.data.map(item => ({
+        id: item.Id,
+        title: item.Title,
+        imagePath: item.ImagePath,
+        companyId: item.CompanyId,
+        companyName: item.CompanyName,
+        forDate: item.ForDate,
+        createdAt: item.CreatedAt
+      }));
+
+      setFlyers(normalized);
     } catch (err) {
       console.error('Failed to load flyers:', err);
       setError('Failed to load flyers');

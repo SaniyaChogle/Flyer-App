@@ -46,7 +46,7 @@ export const flyerAPI = {
   },
   downloadFlyer: (flyerId) => `${API_BASE_URL}/flyer/download/${flyerId}`,
   getFlyerImageUrl: (imagePath) => {
-    // Ensure the image path is absolute and goes through the proxy
+    // Return the image path directly - Vite proxy handles /uploads routing to backend
     if (imagePath && imagePath.startsWith('/uploads/')) {
       return imagePath; // This will be proxied by Vite to the backend
     }
