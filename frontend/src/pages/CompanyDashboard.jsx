@@ -208,6 +208,10 @@ const CompanyDashboard = () => {
                 alt={flyer.title}
                 className="flyer-image"
                 onClick={() => handleImageClick(flyer)}
+                onError={(e) => {
+                  console.error('Failed to load image:', flyer.imagePath, e);
+                  e.target.src = '/vite.svg'; // Fallback to a placeholder
+                }}
                 style={{ cursor: 'pointer' }}
                 title="Click to view full size"
               />

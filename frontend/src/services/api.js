@@ -45,7 +45,13 @@ export const flyerAPI = {
     return api.get(`/flyer/company/${companyId}`, { params });
   },
   downloadFlyer: (flyerId) => `${API_BASE_URL}/flyer/download/${flyerId}`,
-  getFlyerImageUrl: (imagePath) => imagePath,
+  getFlyerImageUrl: (imagePath) => {
+    // Ensure the image path is absolute and goes through the proxy
+    if (imagePath && imagePath.startsWith('/uploads/')) {
+      return imagePath; // This will be proxied by Vite to the backend
+    }
+    return imagePath;
+  },
   deleteFlyer: (flyerId) => api.delete(`/flyer/${flyerId}`),
 };
 

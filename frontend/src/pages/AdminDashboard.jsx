@@ -42,6 +42,7 @@ const AdminDashboard = () => {
         params.companyId = selectedCompanyFilter;
       }
       const response = await flyerAPI.getAll(params);
+      console.log('Flyers data:', response.data);
       setAllFlyers(response.data);
     } catch (err) {
       console.error('Failed to load flyers', err);
@@ -440,6 +441,10 @@ const AdminDashboard = () => {
                   alt={flyer.title}
                   className="flyer-thumbnail"
                   onClick={() => handleImageClick(flyer)}
+                  onError={(e) => {
+                    console.error('Failed to load image:', flyer.imagePath, e);
+                    e.target.src = '/vite.svg'; // Fallback to a placeholder
+                  }}
                   style={{ cursor: 'pointer' }}
                   title="Click to view full size"
                 />
@@ -449,22 +454,7 @@ const AdminDashboard = () => {
                   <p className="flyer-date">
                     For: {(() => {
                       try {
-                        // Try to parse the date - handle various formats
-                        const dateStr = flyer.forDate;
-                        let date;
-
-                        if (typeof dateStr === 'string') {
-                          // If it's an ISO string, parse it directly
-                          if (dateStr.includes('T')) {
-                            date = new Date(dateStr);
-                          } else {
-                            // Try to parse as date-only string
-                            date = new Date(dateStr + 'T00:00:00');
-                          }
-                        } else {
-                          date = new Date(dateStr);
-                        }
-
+                        const date = new Date(flyer.forDate);
                         return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
