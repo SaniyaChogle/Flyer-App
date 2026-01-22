@@ -5,12 +5,85 @@ import { flyerAPI } from '../services/api';
 import MonthNavigator from '../components/MonthNavigator';
 import './CompanyDashboard.css';
 
+// Share Modal Component
+const ShareModal = ({ flyer, onClose, onShare }) => {
+  const handleWhatsAppShare = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const shareMessage = `${flyer.title}\n\nShared from ${user?.companyName || 'Flyer App'}`;
+
+      // Try WhatsApp Web for desktop
+      if (!/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        // Desktop: Try WhatsApp Web
+        const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+        window.open(whatsappUrl, '_blank');
+        onClose();
+        onShare();
+        return;
+      }
+
+      // Mobile: Try native WhatsApp app
+      const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(shareMessage)}`;
+      window.location.href = whatsappUrl;
+
+      // Fallback if WhatsApp app not available
+      setTimeout(() => {
+        const whatsappWebUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+        window.open(whatsappWebUrl, '_blank');
+      }, 1000);
+
+      onClose();
+      onShare();
+    } catch (error) {
+      console.error('WhatsApp share failed:', error);
+      // Fall back to native share
+      onShare();
+    }
+  };
+
+  const handleNativeShare = () => {
+    onShare();
+    onClose();
+  };
+
+  return (
+    <div className="share-modal-overlay" onClick={onClose}>
+      <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="share-modal-header">
+          <h3>Share Flyer</h3>
+          <button className="share-modal-close" onClick={onClose}>×</button>
+        </div>
+
+        <div className="share-modal-content">
+          <button className="share-option whatsapp-priority" onClick={handleWhatsAppShare}>
+            <div className="share-option-icon">📱</div>
+            <div className="share-option-text">
+              <div className="share-option-title">WhatsApp</div>
+              <div className="share-option-subtitle">Share directly on WhatsApp</div>
+            </div>
+          </button>
+
+          <button className="share-option native-share" onClick={handleNativeShare}>
+            <div className="share-option-icon">📤</div>
+            <div className="share-option-text">
+              <div className="share-option-title">More Options</div>
+              <div className="share-option-subtitle">Facebook, Instagram, LinkedIn, etc.</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CompanyDashboard = () => {
   const [flyers, setFlyers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sharingId, setSharingId] = useState(null);
   const [enlargedImage, setEnlargedImage] = useState(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedFlyer, setSelectedFlyer] = useState(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -69,13 +142,18 @@ const CompanyDashboard = () => {
     document.body.removeChild(link);
   };
 
-  const handleShare = async (flyer) => {
+  const handleShare = (flyer) => {
+    setSelectedFlyer(flyer);
+    setShareModalOpen(true);
+  };
+
+  const handleNativeShare = async (flyer) => {
     setSharingId(flyer.id);
     setError('');
 
     try {
       const imageUrl = flyerAPI.getFlyerImageUrl(flyer.imagePath);
-      console.log('Fetching image for generic share:', imageUrl);
+      console.log('Fetching image for native share:', imageUrl);
       const response = await fetch(imageUrl);
       console.log('Fetch response:', response.status, response.ok);
       if (!response.ok) throw new Error(`Failed to fetch image: ${response.status}`);
@@ -139,7 +217,7 @@ const CompanyDashboard = () => {
       );
 
     } catch (err) {
-      console.error('Generic share failed:', err);
+      console.error('Native share failed:', err);
       const errorMessage = err.message || 'Unknown error';
       setError(`Failed to share: ${errorMessage}. Please try the Download button instead.`);
       alert(`Error: ${errorMessage}\n\nPlease try using the Download button instead.`);
@@ -237,9 +315,9 @@ const CompanyDashboard = () => {
                     onClick={() => handleShare(flyer)}
                     className="btn-share"
                     disabled={sharingId === flyer.id}
-                    title="Share to any app (WhatsApp, Facebook, Instagram, LinkedIn, etc.)"
+                    title="Share on WhatsApp"
                   >
-                    {sharingId === flyer.id ? 'Preparing...' : '📤 Share'}
+                    {sharingId === flyer.id ? 'Preparing...' : 'Share on whatsapp'}
                   </button>
                   <button
                     onClick={() => handleDownload(flyer.id, flyer.title)}
@@ -253,6 +331,18 @@ const CompanyDashboard = () => {
           ))}
         </div>
       </div>
+
+      {/* Share Modal */}
+      {shareModalOpen && selectedFlyer && (
+        <ShareModal
+          flyer={selectedFlyer}
+          onClose={() => {
+            setShareModalOpen(false);
+            setSelectedFlyer(null);
+          }}
+          onShare={() => handleNativeShare(selectedFlyer)}
+        />
+      )}
     </div>
   );
 };
