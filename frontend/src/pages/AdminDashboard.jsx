@@ -138,12 +138,17 @@ const AdminDashboard = () => {
       return;
     }
 
+    if (isNaN(parseInt(companyId))) {
+      setError('Please select a valid company');
+      return;
+    }
+
     setUploading(true);
 
     try {
       const formData = new FormData();
       formData.append('title', finalTitle);
-      formData.append('companyId', companyId);
+      formData.append('companyId', parseInt(companyId, 10));
       formData.append('forDate', forDate);
       formData.append('file', file);
 
@@ -290,7 +295,11 @@ const AdminDashboard = () => {
         <div className="upload-card">
           <h2>Upload Flyer</h2>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }}>
             <div className="form-group">
               <label htmlFor="title-mode">Title Selection</label>
               <div className="radio-group">
@@ -335,6 +344,11 @@ const AdminDashboard = () => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder="Enter custom title"
                   required
                 />
@@ -348,6 +362,11 @@ const AdminDashboard = () => {
                 id="for-date"
                 value={forDate}
                 onChange={(e) => setForDate(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
                 required
               />
               <small className="help-text">This determines which month the flyer appears in</small>
@@ -363,7 +382,7 @@ const AdminDashboard = () => {
               >
                 <option value="">Select a company</option>
                 {companies.map((company, index) => (
-                  <option key={`company-${company.id}-${index}`} value={company.Id}>
+                  <option key={`company-${company.id}-${index}`} value={company.id}>
                     {company.name}
                   </option>
                 ))}
